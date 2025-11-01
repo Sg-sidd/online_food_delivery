@@ -30,9 +30,12 @@ import EditCategory from './pages/EditCategory';
 import EditFood from './pages/EditFood';
 import ManageUsers from './pages/ManageUsers';
 import { CartProvider } from './context/CartContext';
+import { WishlistProvider } from './context/WishListContext';
 import FoodMenu from './pages/FoodMenu';
+import Wishlist from './pages/Wishlist';
 function App() {
   return (
+    <WishlistProvider>
     <CartProvider>
    <BrowserRouter>
    <Routes>
@@ -68,9 +71,12 @@ function App() {
       <Route path="/profile" element={<ProfilePage/>}></Route>
       <Route path="/change-password" element={<ChangePassword/>}></Route>
       <Route path="/food-menu" element={<FoodMenu/>}></Route>
+      <Route path="/wishlist" element={<Wishlist/>}></Route>
+
    </Routes>
    </BrowserRouter>
    </CartProvider>
+   </WishlistProvider>
   );
 }
 

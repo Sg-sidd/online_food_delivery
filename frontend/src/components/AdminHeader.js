@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React from 'react'
 import { FaBars, FaBell, FaChevronLeft, FaChevronRight, FaSignOutAlt } from 'react-icons/fa'
 import { useNavigate } from 'react-router-dom';
 

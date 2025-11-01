@@ -751,7 +751,7 @@ def add_to_wishlist(request):
     
 
 @api_view(['POST'])
-def remove_to_wishlist(request):
+def remove_from_wishlist(request):
     user_id = request.data.get('user_id')
     food_id = request.data.get('food_id')
     try: 
@@ -764,7 +764,7 @@ def remove_to_wishlist(request):
 from .serializers import WishlistSerializer
 @api_view(['GET'])
 def get_wishlist(request,user_id):
-      wishlist_items = Wishlist.objects.get(user_id = user_id)
+      wishlist_items = Wishlist.objects.filter(user_id = user_id)
       serializer = wishlist_items = WishlistSerializer(wishlist_items,many=True)
       return Response(serializer.data)
     

@@ -3,6 +3,7 @@ import { FaCogs, FaHeart, FaHome, FaShoppingCart, FaSignInAlt, FaSignOutAlt, FaT
 import { Link , useNavigate} from 'react-router-dom';
 import '../styles/layout.css';
 import { useCart } from '../context/CartContext';
+import { useWishlist } from '../context/WishListContext';
 
 
 const PublicLayout = ({children}) => {
@@ -10,6 +11,7 @@ const PublicLayout = ({children}) => {
   const [isLoggedIn,setIsLoggedIn] = useState(false);
   const [userName,setUserName] = useState("");
   const {cartCount,setCartCount} = useCart();
+  const {wishlistCount,setWishlistCount} = useWishlist();
   
    const navigate = useNavigate();
    const userId = localStorage.getItem("userId");
@@ -23,11 +25,22 @@ const PublicLayout = ({children}) => {
     }
    }
 
+   
+   const fetchWishlistCount = async() => {
+    if (userId){
+      const res = await fetch(`http://127.0.0.1:8000/api/wishlist/${userId}`);
+      const data = await res.json();
+      setWishlistCount(data.length);
+    }
+   }
+
+
     useEffect(()=>{
     if (userId){
       setIsLoggedIn(true);
       setUserName(name);
       fetchCartCount();
+       fetchWishlistCount();
     }
     },[userId])
 
@@ -36,6 +49,7 @@ const PublicLayout = ({children}) => {
       localStorage.removeItem('userName');
       setIsLoggedIn(false);
       setCartCount(0);
+      setWishlistCount(0);
       navigate('/login')
     }
   return (
@@ -84,13 +98,17 @@ const PublicLayout = ({children}) => {
           <Link className="nav-link active" to="/cart"><FaShoppingCart className='me-1'/>
           Cart
           {cartCount > 0 && (
-            <span>({cartCount})</span>
+            <span className='badge bg-light text-dark ms-1'>({cartCount})</span>
           )}
           </Link>
         </li>
 
          <li className="nav-item mx-1">
-          <Link className="nav-link active" to="/admin-login"><FaHeart className='me-1'/>Wishlist</Link>
+          <Link className="nav-link active" to="/wishlist"><FaHeart className='me-1'/>Wishlist
+          {wishlistCount > 0 && (
+            <span className='badge bg-light text-dark ms-1'>({wishlistCount})</span>
+          )}
+          </Link>
         </li>
 
          <li class="nav-item dropdown">

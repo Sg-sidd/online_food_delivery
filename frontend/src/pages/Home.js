@@ -2,23 +2,76 @@ import React ,{useState,useEffect} from 'react'
 import PublicLayout from '../components/PublicLayout';
 import '../styles/home.css';
 import { Link } from 'react-router-dom';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useWishlist } from '../context/WishListContext';
 
 const Home = () => {
 
   const [foods,setFoods] = useState([]);
+  const [wishlist,setWishlist] = useState([]);
+  const {wishlistCount,setWishlistCount} = useWishlist();
+
+  const user_id = localStorage.getItem('userId')
   
      useEffect(()=> {
             fetch(`http://127.0.0.1:8000/api/random_foods`)
           .then(res=>res.json())
          .then(data=>{
           setFoods(data)
-          setFoods(data)
          })
         },[]);
       
+            useEffect(()=> {
+            if(user_id){
+              
+            fetch(`http://127.0.0.1:8000/api/wishlist/${user_id}`)
+          .then(res=>res.json())
+         .then(data=>{
+          const wishlistIds = data.map(item => item.food_id);
+          setWishlist(wishlistIds)
+         })
+         
+            }
+        },[user_id]);
+      
+const toggleWishlist = async (food_id) =>{
+  if (!user_id){
+    toast.info('Please login to use wishlist.');
+    return;
+  }
+const isWishlisted = wishlist.includes(food_id);
+const endpoint = isWishlisted ? 'remove' : 'add';
+try{
+const response = await fetch(`http://127.0.0.1:8000/api/wishlist/${endpoint}/`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    user_id: parseInt(user_id),
+    food_id: food_id
+  }),
+});
+          if(response.ok){
+            setWishlist(prev=>isWishlisted ? prev.filter(id=>id!==food_id) : [...prev,food_id]);
 
+      const updatedCount = await fetch(`http://127.0.0.1:8000/api/wishlist/${user_id}`);
+      const wishlistData = await updatedCount.json();
+      setWishlistCount(wishlistData.length);
+
+            toast.success(isWishlisted ? "Removed from wishlist" : "Add  to wishlist");
+          }
+          else{
+               toast.error('Failed to update wishlist');
+          }
+}
+catch (error)
+{
+   toast.error('Something went wrong');
+}
+}
   return (
      <PublicLayout>
+      <ToastContainer position="top-center" autoClose={2000} />
     <section className=' hero py-5 text-center ' style={{backgroundImage:"url('/images/banner.jpg')"}}>
       <div style={{backgroundColor:"rgba(0,0,0,0.7)",padding:"40px 20px"
         ,borderRadius:"10px"
@@ -48,7 +101,8 @@ const Home = () => {
            <div className='card hovereffect'>
             <div className='position-relative'>
               <img src={`http://127.0.0.1:8000${food.image}`} className='card-img-top' style={{height:"180px"}}/>
-              <i className='fas fa-heart heart-anim position-absolute top-0 end-0 m-2 text-danger' 
+              <i className={
+               `${wishlist.includes(food.id) ? 'fas' : 'far'} fa-heart heart-anim position-absolute top-0 end-0 m-2 text-danger`}
                    style={{
       cursor: 'pointer',
       background: 'white',
@@ -61,6 +115,7 @@ const Home = () => {
       justifyContent: 'center', // Center the icon
       alignItems: 'center' // Center the icon
     }}
+    onClick={()=>toggleWishlist(food.id)}
               ></i>
             </div>
            <div className='card-body'>

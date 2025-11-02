@@ -97,7 +97,7 @@ catch (error)
         </p>
         ) : (
            foods.map((food,index)=>(
-          <div className='col-md-4 mb-4'>
+          <div className='col-md-4 mb-4' key={food.id}>
            <div className='card hovereffect'>
             <div className='position-relative'>
               <img src={`http://127.0.0.1:8000${food.image}`} className='card-img-top' style={{height:"180px"}}/>
@@ -176,7 +176,7 @@ catch (error)
  
     <section className='py-5 bg-warning text-center text-dark'>
     <h4>Ready to Satisfy your Hunger?</h4>
-    <Link to='' className='btn btn-dark btn-lg'>
+    <Link to='/food-menu' className='btn btn-dark btn-lg'>
     Browse Full Menu
     </Link>
     </section>

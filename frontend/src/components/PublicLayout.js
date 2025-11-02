@@ -137,6 +137,7 @@ const PublicLayout = ({children}) => {
   <footer className='text-center py-3 mt-5'>
     <div className='container'>
        <p className=''>&copy; 2025 Laxmi Kitchen. All rights reserved</p>
+       <p className='fw-bold'>Designed & Developed by Siddharth Gaud @webcos</p>
     </div>
   </footer>
 

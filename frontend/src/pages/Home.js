@@ -19,6 +19,8 @@ const Home = () => {
           .then(res=>res.json())
          .then(data=>{
           setFoods(data)
+          console.log(foods);
+
          })
         },[]);
       

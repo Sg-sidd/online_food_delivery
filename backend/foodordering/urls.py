@@ -48,6 +48,6 @@ urlpatterns = [
     path('wishlist/add/',add_to_wishlist,name='add_to_wishlist'),
     path('wishlist/remove/',remove_from_wishlist,name='add_to_wishlist'),
     path('wishlist/<int:user_id>/',get_wishlist,name='add_to_wishlist'),
-
+    path('track_order/<str:order_number>/',track_order,name='track_orde'),
 
 ]

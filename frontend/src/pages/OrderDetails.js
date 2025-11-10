@@ -1,12 +1,15 @@
 import React, { useState, useEffect } from "react";
 import PublicLayout from "../components/PublicLayout";
 import { useNavigate,useParams } from "react-router-dom";
+import CancelOrderModel from "../components/CancelOrderModel";
 
 const OrderDetails = () => {
      const userId = localStorage.getItem("userId");
       const [orderItems, setOrderItems] = useState([]);
        const [orderAddress, setOrderAddress] = useState(null);
         const [total,setTotal] = useState(0);
+        const [showCancelModel,setShowCancelModel] = useState(false);
+        const handleCloseModel = () => setShowCancelModel(false);
       const navigate = useNavigate();
       const {order_number} = useParams();
         useEffect(() => {
@@ -73,9 +76,29 @@ const OrderDetails = () => {
                <i className="fas fa-file-invoice"></i> Invoice
               </a>
 
-                <a href="" className="btn btn-danger mt-2">
-               <i className="fa s fa-times-circle"></i> cancel Order
+             {orderAddress && (
+              <>
+              <CancelOrderModel
+              show = {showCancelModel}
+              handleClose={ handleCloseModel}
+              orderNumber = {order_number}
+              paymentMode = {orderAddress.payment_mode}
+              />
+                 {(orderAddress.order_final_status === null || 
+                  orderAddress.order_final_status === 'Order Confirmed' ||
+                  orderAddress.order_final_status === 'Food being Prepared') ? 
+                  (
+                   <a onClick={() => setShowCancelModel(true)} className="btn btn-danger w-100 mt-2">
+               <i className="fas fa-times-circle me-2"></i> cancel Order
               </a>
+                  ) : (
+                    <p className="text-danger mt-2">
+                    ❌ Order can't be cancelled(current Status: {orderAddress.order_final_status})
+
+                    </p>
+                  )}
+              </>
+             )}
             </div>
            )}
           </div>

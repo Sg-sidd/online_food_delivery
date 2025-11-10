@@ -770,3 +770,16 @@ def get_wishlist(request,user_id):
     
 
 
+from .serializers import FoodTrackingSerializer
+@api_view(['GET'])
+def track_order(request,order_number):
+      sample_order = Order.objects.filter(order_number=order_number,is_order_placed = True).first()
+
+      if not sample_order:
+          return Response({"message": "Order not found or not yet placed."},status=404)
+      
+      tracking_entries = FoodTracking.objects.filter(order=sample_order)
+
+      serializer = FoodTrackingSerializer(tracking_entries,many=True)
+      return Response(serializer.data)
+

@@ -33,6 +33,7 @@ import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishListContext';
 import FoodMenu from './pages/FoodMenu';
 import Wishlist from './pages/Wishlist';
+import TrackOrder from './pages/TrackOrder';
 function App() {
   return (
     <WishlistProvider>
@@ -72,6 +73,9 @@ function App() {
       <Route path="/change-password" element={<ChangePassword/>}></Route>
       <Route path="/food-menu" element={<FoodMenu/>}></Route>
       <Route path="/wishlist" element={<Wishlist/>}></Route>
+      <Route path="/track" element={<TrackOrder/>}></Route>
+      <Route path="/track-order/:paramOrderNumber" element={<TrackOrder/>}></Route>
+
 
    </Routes>
    </BrowserRouter>
